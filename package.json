@@ -1,0 +1,8 @@
+{
+  "name": "cycle-node-http-driver",
+  "version": "0.0.0",
+  "description": "A HTTP server driver for Cycle.js",
+  "main": "index.js",
+  "author": "Rodolphe Belouin <rodolphe.belouin@gmail.com>",
+  "license": "MIT"
+}
