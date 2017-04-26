@@ -5,6 +5,10 @@
   "main": "index.js",
   "author": "Rodolphe Belouin <rodolphe.belouin@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rbelouin/cycle-node-http-driver.git"
+  },
   "dependencies": {
     "uuid": "^3.0.1",
     "xstream": "^10.5.0"
