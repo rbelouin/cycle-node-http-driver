@@ -2,12 +2,12 @@ const http = require('http');
 const uuidV4 = require('uuid/v4');
 const xs = require('xstream').default;
 
-exports.makeHTTPServerDriver = function (port) {
+exports.makeHTTPServerDriver = function (port, options) {
   return function (response$) {
     const responses = {};
 
     handleEmittedResponses(responses, response$);
-    return createRequestStream(responses, port);
+    return createRequestStream(responses, port, options);
   };
 };
 
@@ -30,7 +30,7 @@ function handleEmittedResponses (responses, response$) {
   });
 }
 
-function createRequestStream (responses, port) {
+function createRequestStream (responses, port, options) {
   const producer = {
     start: function (listener) {
       this.server = http.createServer(function (req, res) {
@@ -41,6 +41,12 @@ function createRequestStream (responses, port) {
 
         listener.next(req);
       });
+
+      if (options && options.keepAlive) {
+        this.server.addListener('connection', function(stream) {
+          stream.setTimeout(options.keepAlive);
+        });
+      }
 
       this.server.listen(port);
     },

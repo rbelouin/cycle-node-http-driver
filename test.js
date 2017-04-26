@@ -22,7 +22,9 @@ function main({ HTTPServer }) {
 }
 
 const drivers = {
-  HTTPServer: makeHTTPServerDriver(8080)
+  HTTPServer: makeHTTPServerDriver(8080, {
+    keepAlive: 1000
+  })
 };
 
 run(main, drivers);
