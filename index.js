@@ -15,6 +15,14 @@ function handleEmittedResponses (responses, response$) {
   response$.addListener({
     next: response => {
       const res = responses[response.id];
+      const headers = response.headers || {};
+
+      res.statusCode = response.statusCode || 200;
+      res.statusMessage = response.statusMessage;
+
+      for (header in headers) {
+        res.setHeader(header, headers[header]);
+      }
 
       res.end(response.body);
       delete responses[response.id];
