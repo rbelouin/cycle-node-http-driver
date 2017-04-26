@@ -2,6 +2,12 @@
 
 A server HTTP driver for Cycle.js
 
+## Installation
+
+```sh
+$ npm install --save cycle-node-http-driver
+```
+
 ## Basic usage
 
 ```js
