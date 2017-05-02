@@ -1,8 +1,8 @@
-const http = require('http');
-const uuidV4 = require('uuid/v4');
-const xs = require('xstream').default;
+import * as http from 'http';
+import uuidV4 from 'uuid/v4';
+import xs from 'xstream';
 
-exports.makeHTTPServerDriver = function (port, options) {
+export function makeHTTPServerDriver (port, options) {
   return function (response$) {
     const responses = {};
 
@@ -20,7 +20,7 @@ function handleEmittedResponses (responses, response$) {
       res.statusCode = response.statusCode || 200;
       res.statusMessage = response.statusMessage;
 
-      for (header in headers) {
+      for (let header in headers) {
         res.setHeader(header, headers[header]);
       }
 
@@ -35,11 +35,11 @@ function createRequestStream (responses, port, options) {
     start: function (listener) {
       this.server = http.createServer(function (req, res) {
         const randomId = uuidV4();
+        const request = Object.assign({}, req, {id: randomId});
 
-        req.id = randomId;
         responses[randomId] = res;
 
-        listener.next(req);
+        listener.next(request);
       });
 
       if (options && options.keepAlive) {
