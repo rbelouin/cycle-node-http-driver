@@ -1,8 +1,8 @@
-const assert = require('assert');
-const http = require('http');
+import * as assert from 'assert';
+import * as http from 'http';
 
-const cycleRun = require('@cycle/run').default;
-const makeHTTPServerDriver = require('../src/index').makeHTTPServerDriver;
+import { run } from '@cycle/run';
+import { makeHTTPServerDriver } from '../src/index';
 
 describe('makeHTTPServerDriver', function() {
   it('should start a server and send the right responses', function(done) {
@@ -30,7 +30,7 @@ describe('makeHTTPServerDriver', function() {
       })
     };
 
-    const stop = cycleRun(main, drivers);
+    const stop = run(main, drivers);
 
     const requestOptions = {
       host: '127.0.0.1',
