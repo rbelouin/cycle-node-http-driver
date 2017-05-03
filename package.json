@@ -23,6 +23,6 @@
   },
   "scripts": {
     "build": "webpack",
-    "test": "mocha test.js"
+    "test": "npm run build && mocha test.js"
   }
 }
