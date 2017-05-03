@@ -2,7 +2,7 @@ const assert = require('assert');
 const http = require('http');
 
 const cycleRun = require('@cycle/run').default;
-const makeHTTPServerDriver = require('../dist/index').makeHTTPServerDriver;
+const makeHTTPServerDriver = require('../src/index').makeHTTPServerDriver;
 
 describe('makeHTTPServerDriver', function() {
   it('should start a server and send the right responses', function(done) {
