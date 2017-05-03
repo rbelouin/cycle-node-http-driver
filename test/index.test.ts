@@ -1,8 +1,8 @@
 const assert = require('assert');
 const http = require('http');
 
-const run = require('@cycle/run').default;
-const makeHTTPServerDriver = require('./dist/index').makeHTTPServerDriver;
+const cycleRun = require('@cycle/run').default;
+const makeHTTPServerDriver = require('../dist/index').makeHTTPServerDriver;
 
 describe('makeHTTPServerDriver', function() {
   it('should start a server and send the right responses', function(done) {
@@ -30,7 +30,7 @@ describe('makeHTTPServerDriver', function() {
       })
     };
 
-    run(main, drivers);
+    const stop = cycleRun(main, drivers);
 
     const requestOptions = {
       host: '127.0.0.1',
@@ -41,7 +41,7 @@ describe('makeHTTPServerDriver', function() {
       assert.equal(res.statusCode, statusCode, 'Status code should be as expected');
       assert.equal(res.statusMessage, statusMessage, 'Status message should be as expected');
 
-      for (header in headers) {
+      for (let header in headers) {
         assert.equal(res.headers[header.toLowerCase()], headers[header], `Header (${header}) should be as expected`);
       }
 
@@ -51,6 +51,7 @@ describe('makeHTTPServerDriver', function() {
         const actualBody = Buffer.concat(chunks).toString('utf-8');
         assert.equal(actualBody, body);
 
+        stop();
         done();
       });
     });
