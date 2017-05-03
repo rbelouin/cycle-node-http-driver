@@ -4,8 +4,12 @@ import * as http from 'http';
 import { run } from '@cycle/run';
 import { makeHTTPServerDriver } from '../src/index';
 
+interface IncomingMessageWithBody extends http.IncomingMessage {
+  body: string
+}
+
 describe('makeHTTPServerDriver', function() {
-  it('should start a server and send the right responses', function(done) {
+  it('should start a server and send the right responses', function() {
     const port = 8080;
     const statusCode = 299;
     const statusMessage = 'Custom Response';
@@ -32,12 +36,12 @@ describe('makeHTTPServerDriver', function() {
 
     const stop = run(main, drivers);
 
-    const requestOptions = {
+    const responsePromise: Promise<IncomingMessageWithBody> = sendRequest({
       host: '127.0.0.1',
       port
-    };
+    });
 
-    const req = http.request(requestOptions, function (res) {
+    return responsePromise.then(res => {
       assert.equal(res.statusCode, statusCode, 'Status code should be as expected');
       assert.equal(res.statusMessage, statusMessage, 'Status message should be as expected');
 
@@ -45,17 +49,24 @@ describe('makeHTTPServerDriver', function() {
         assert.equal(res.headers[header.toLowerCase()], headers[header], `Header (${header}) should be as expected`);
       }
 
-      const chunks = [];
-      res.on('data', chunk => chunks.push(chunk));
-      res.on('end', () => {
-        const actualBody = Buffer.concat(chunks).toString('utf-8');
-        assert.equal(actualBody, body);
+      assert.equal(res.body, body);
+      stop();
+    });
+  });
+});
 
-        stop();
-        done();
+function sendRequest(options: http.RequestOptions) {
+  return new Promise<IncomingMessageWithBody>(function(resolve, reject) {
+    const req: http.ClientRequest = http.request(options, function(res) {
+      const chunks: Array<Buffer> = [];
+
+      res.on('data', (chunk: Buffer) => chunks.push(chunk));
+      res.on('end', () => {
+        const body = Buffer.concat(chunks).toString();
+        resolve(Object.assign({}, res, { body }));
       });
     });
 
     req.end();
   });
-});
+}
