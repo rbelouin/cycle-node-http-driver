@@ -3,7 +3,7 @@ import { Stream } from 'xstream';
 export type HTTPServerDriver = (r$: Stream<Response>) => Stream<Request>;
 
 export type Options = {
-  keepAlive?: boolean
+  keepAlive?: number
 };
 
 export interface Request {
